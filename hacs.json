@@ -1,7 +1,5 @@
 {
     "name": "CoCT Loadshedding Interface",
-    "domains": [
-        "sensor"
-    ],
-    "iot_class": "Cloud Polling"
+    "homeassistant": "2022.7.1",
+    "country": "ZA"
 }
