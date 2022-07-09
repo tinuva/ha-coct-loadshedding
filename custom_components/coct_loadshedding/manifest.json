@@ -6,7 +6,6 @@
   "issue_tracker": "https://github.com/tinuva/ha-coct-loadshedding/issues",  
   "dependencies": [],
   "config_flow": true,
-  "version": "1.0.0",
   "codeowners": [
     "@tinuva"
   ],
