@@ -1,4 +1,5 @@
 {
+  "domain": "coct_loadshedding",
   "name": "CoCT Loadshedding Interface",
   "version": "1.0.0",  
   "documentation": "https://github.com/tinuva/ha-coct-loadshedding",
