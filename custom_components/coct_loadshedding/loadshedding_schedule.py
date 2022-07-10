@@ -20,8 +20,6 @@ _LOGGER = logging.getLogger(__name__)
 def getAreaCodesByTimeSlot(stage, day, timeSlot):
     day = _clipDayToGroup(day)
     areaCodeAcc = _getAreaCodeAccumulationDayStart(stage, day) + timeSlot
-    if stage > 4:
-        areaCodeAcc += 1
     areaCode = _nomalizeAreaCode(stage, areaCodeAcc)
     areaCodes = [areaCode]
 
