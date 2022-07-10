@@ -3,7 +3,7 @@
 NAME = "CoCT Loadshedding Interface"
 DOMAIN = "coct_loadshedding"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 ISSUE_URL = "https://github.com/tinuva/ha-coct-loadshedding/issues"
 
