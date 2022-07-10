@@ -1,5 +1,4 @@
 import datetime
-import pytz
 import logging
 
 from .const import (
@@ -128,30 +127,38 @@ def getNextTimeSlot(stage, areaCode):
 
 def isLoadSheddingNow(stage, areaCode):
     d = datetime.datetime.now() #+ datetime.timedelta(hours=2)
+    #d = datetime.datetime.strptime("2022-07-10T14:20", '%Y-%m-%dT%H:%M')
+
     hour = d.hour
     areaCodes = getAreaCodesByTimeValue(
         stage, d.day, datetime.time(hour=d.hour, minute=d.minute)
     )
+    _LOGGER.debug("Areas in loadshedding now: " + str(areaCodes))
 
     result = {"status": False, "endDate": None}
+    _LOGGER.debug("Result: " + str(result))
 
     try:
         if areaCodes.index(areaCode) > -1:
             result["status"] = True
+            _LOGGER.debug('status = true')
     except:
         pass
 
     if result["status"]:
         slot = _getTimeslotFromHour(hour)
-        endDate = datetime.datetime(
-            d.year,
-            d.month,
-            d.day,
-            getTimeSlotHour(slot) + TIME_SLOT_HOURS,
-            TIME_SLOT_MINUTES,
-        )
+        _LOGGER.debug('TimeSlotHour:' + str(getTimeSlotHour(slot)))
+        _LOGGER.debug('TIME_SLOT_HOURS:' + str(TIME_SLOT_HOURS))
+        end_hour = getTimeSlotHour(slot) + TIME_SLOT_HOURS
+        _LOGGER.debug('end_hour:' + str(end_hour))
+        if end_hour > 23:
+            end_hour = end_hour - 24
+            endDate = datetime.datetime(d.year, d.month, d.day, end_hour, TIME_SLOT_MINUTES)
+            endDate = endDate + datetime.timedelta(1) # +1 day since we removed 24 hours
+        else:
+            endDate = datetime.datetime(d.year, d.month, d.day, end_hour, TIME_SLOT_MINUTES)
         result["endDate"] = endDate
-
+    _LOGGER.debug("Final result: " + str(result))
     return result
 
 
