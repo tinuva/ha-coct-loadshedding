@@ -5,7 +5,7 @@ import logging
 from aiohttp.client_exceptions import ClientConnectorError, ServerDisconnectedError
 from aiohttp_retry import RetryClient
 
-from .loadshedding_schedule import isLoadSheddingNow, getNextTimeSlot
+from .loadshedding_schedule import isLoadSheddingNow, getNextTimeSlot, getTimeSlotsByAreaCode, getTimeSlotHour
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -153,6 +153,22 @@ class coct_interface:
             except Exception as e:
                 _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
 
+        # Grab today's times
+        ## First slots
+        today_slots = getTimeSlotsByAreaCode(stage, datetime.datetime.now().day, coct_area)
+        ## convert to hours
+        today_slots_hours = []
+        for s in today_slots:
+            today_slots_hours.append(getTimeSlotHour(s))
+        # Grab tomorrow's times
+        tomorrow_date = datetime.datetime.now() + datetime.timedelta(1) # +1 day
+        ## First slots
+        tomorrow_slots = getTimeSlotsByAreaCode(stage, tomorrow_date.day, coct_area)
+        ## convert to hours
+        tomorrow_slots_hours = []
+        for s in tomorrow_slots:
+            tomorrow_slots_hours.append(getTimeSlotHour(s))
+
         data = {
             "data": {
                 "stage": stage,
@@ -162,7 +178,10 @@ class coct_interface:
                 "next_load_shedding_slot": next_load_shedding_slot,
                 "next_stage": next_stage,
                 "next_stage_start_time": next_stage_start_time,
-                "last_updated": last_updated
+                "last_updated": last_updated,
+                "today_slots": today_slots_hours,
+                "tomorrow_slots": tomorrow_slots_hours
             },
         }
+        _LOGGER.debug("Data: " + str(data))
         return data
