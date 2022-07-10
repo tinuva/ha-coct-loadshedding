@@ -1,10 +1,13 @@
 import ssl
 import datetime
+import logging
 
 from aiohttp.client_exceptions import ClientConnectorError, ServerDisconnectedError
 from aiohttp_retry import RetryClient
 
 from .loadshedding_schedule import isLoadSheddingNow, getNextTimeSlot
+
+_LOGGER = logging.getLogger(__name__)
 
 class coct_interface:
     """Interface class to obtain loadshedding information using the CoCT API"""
@@ -133,20 +136,22 @@ class coct_interface:
         next_stage_start_time = datetime.datetime.strptime(json[0]['nextStageStartTime'], '%Y-%m-%dT%H:%M')
         last_updated = datetime.datetime.strptime(json[0]['lastUpdated'], '%Y-%m-%dT%H:%M:%S.000Z')
 
+        # CoCT app works out different 'stage' if after 'next_stage_start_time'
+        if next_stage_start_time < d:
+            stage = next_stage
+            next_stage_start_time = None
+        # Just in case, check eskom stage, if it is lower than stage use that
+        if stage_eskom < stage:
+            stage = stage_eskom
+            next_stage_start_time = None
+
         # if loadshedding active calculate slots for area if area set
         if stage > 0 and coct_area > 0:
             try:
                 next_load_shedding_slot = getNextTimeSlot(stage, coct_area)["date"]
                 load_shedding_active = isLoadSheddingNow(stage, coct_area)["status"]
-            except:
-                pass
-
-        # CoCT app works out different 'stage' if after 'next_stage_start_time'
-        if next_stage_start_time < d:
-            stage = next_stage
-        # Just in case, check eskom stage, if it is lower than stage use that
-        if stage_eskom < stage:
-            stage = stage_eskom
+            except Exception as e:
+                _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
 
         data = {
             "data": {
