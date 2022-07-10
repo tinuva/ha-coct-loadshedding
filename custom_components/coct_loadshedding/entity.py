@@ -37,13 +37,16 @@ class CoCTEntity(entity.Entity):
     def extra_state_attributes(self):
         """Return the state attributes."""
         return {
-            "stage": self.coordinator.data.get("stage"),
+            "stage_coct": self.coordinator.data.get("stage"),
+            "stage_eskom": self.coordinator.data.get("stage_eskom"),
             "coct_area": self.coordinator.data.get("coct_area"),
             "load_shedding_active": self.coordinator.data.get("load_shedding_active"),
             "next_load_shedding_slot": self.coordinator.data.get("next_load_shedding_slot"),
             "next_stage": self.coordinator.data.get("next_stage"),
             "next_stage_start_time": self.coordinator.data.get("next_stage_start_time"),
             "last_updated": self.coordinator.data.get("last_updated"),
+            "today_slots": self.coordinator.data.get("today_slots"),
+            "tomorrow_slots": self.coordinator.data.get("tomorrow_slots"),
         }
 
     async def async_added_to_hass(self):
