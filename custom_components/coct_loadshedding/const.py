@@ -3,7 +3,7 @@
 NAME = "CoCT Loadshedding Interface"
 DOMAIN = "coct_loadshedding"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "1.0.3"
+VERSION = "1.0.4"
 
 ISSUE_URL = "https://github.com/tinuva/ha-coct-loadshedding/issues"
 
@@ -21,7 +21,7 @@ CONF_AREA = "coct_area"
 
 # Defaults
 DEFAULT_SCAN_PERIOD = 900
-MIN_SCAN_PERIOD = 300
+MIN_SCAN_PERIOD = 30
 DEFAULT_AREA = 0
 
 # Defaults
