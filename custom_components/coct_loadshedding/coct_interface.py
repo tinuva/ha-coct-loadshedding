@@ -151,14 +151,18 @@ class coct_interface:
             _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
         stage = json[0]['currentStage']
         next_stage = json[0]['nextStage']
-        if next_stage_start_time is not None:
+        try:
             next_stage_start_time = datetime.datetime.strptime(json[0]['nextStageStartTime'], '%Y-%m-%dT%H:%M')
             # CoCT app works out different 'stage' if after 'next_stage_start_time'
             if next_stage_start_time < d:
                 stage = next_stage
                 next_stage_start_time = None
-        if last_updated is not None:
+        except Exception as e:
+            _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
+        try:
             last_updated = datetime.datetime.strptime(json[0]['lastUpdated'], '%Y-%m-%dT%H:%M:%S.000Z')
+        except Exception as e:
+            _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
 
         # Just in case, check eskom stage, if it is lower than stage use that
         if stage_eskom and stage_eskom < stage:
