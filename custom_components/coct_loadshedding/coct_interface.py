@@ -168,7 +168,7 @@ class coct_interface:
         except Exception as e:
             _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
         try:
-            last_updated = datetime.datetime.strptime(json[0]['lastUpdated'], '%Y-%m-%dT%H:%M:%S.000Z')
+            last_updated = datetime.datetime.strptime(json[0]['lastUpdated'], '%Y-%m-%dT%H:%M:%S.%fZ')
         except Exception as e:
             _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
 
@@ -197,7 +197,7 @@ class coct_interface:
                     today_slots_hours.append(getTimeSlotHour(s))
             except Exception as e:
                 _LOGGER.error(e, exc_info=True) # log exception info at ERROR log level
-            try:                    
+            try:
                 # Grab tomorrow's times
                 tomorrow_date = datetime.datetime.now() + datetime.timedelta(1) # +1 day
                 ## First slots
